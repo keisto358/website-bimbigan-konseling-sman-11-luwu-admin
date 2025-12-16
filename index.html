@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin BK SMAN 11 Luwu</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial; background-color: #f2f2f2; padding: 20px; }
+        header { text-align: center; margin-bottom: 20px; }
+        header h1 { margin: 5px 0; }
+        header h2 { margin: 5px 0; font-weight: normal; color: #555; }
+
+        /* Container tombol di atas tabel */
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            background-color: white; 
+            table-layout: fixed; 
+        }
+        th, td { 
+            border: 1px solid #1A237E; 
+            padding: 10px; 
+            text-align: left; 
+            word-wrap: break-word; 
+        }
+        th { background-color: #1A237E; color: #FFD700; }
+        tr:nth-child(even) { background-color: #E8EAF6; }
+
+        th:nth-child(1), td:nth-child(1) { width: 5%; text-align: center; }
+        th:nth-child(2), td:nth-child(2) { width: 25%; }
+        th:nth-child(3), td:nth-child(3) { width: 15%; text-align: center; }
+        th:nth-child(4), td:nth-child(4) { width: 55%; }
+
+        button { 
+            padding: 8px 12px; 
+            background-color: #1A237E; 
+            color: #FFD700; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover { 
+            background-color: #FFD700; 
+            color: #1A237E; 
+            border: 1px solid #1A237E; 
+        }
+
+        .hapus-btn { background-color: #f44336; }
+        .hapus-btn:hover { background-color: #d32f2f; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>BK SMAN 11 Luwu</h1>
+        <h2>Data Konsultasi Siswa - Admin</h2>
+    </header>
+
+    <main>
+        <!-- Tombol Export PDF dan Hapus Data di atas tabel -->
+        <div class="button-container">
+            <button id="exportPDF">Export PDF</button>
+            <button id="hapusData" class="hapus-btn">Hapus Semua Data</button>
+        </div>
+
+        <table id="tabelSiswa">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Siswa</th>
+                    <th>Kelas</th>
+                    <th>Masalah</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        const tabelBody = document.querySelector('#tabelSiswa tbody');
+        const hapusBtn = document.getElementById('hapusData');
+        const exportBtn = document.getElementById('exportPDF');
+
+        function tampilkanData() {
+            tabelBody.innerHTML = '';
+            const dataSiswa = JSON.parse(localStorage.getItem('dataSiswa')) || [];
+
+            if(dataSiswa.length === 0){
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4" style="text-align:center;">Belum ada data siswa</td>`;
+                tabelBody.appendChild(row);
+            } else {
+                dataSiswa.forEach((siswa, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${siswa.nama}</td>
+                        <td>${siswa.kelas}</td>
+                        <td>${siswa.masalah}</td>
+                    `;
+                    tabelBody.appendChild(row);
+                });
+            }
+        }
+
+        tampilkanData();
+
+        hapusBtn.addEventListener('click', () => {
+            if(confirm("Apakah yakin ingin menghapus semua data siswa?")) {
+                localStorage.removeItem('dataSiswa');
+                tampilkanData();
+            }
+        });
+
+        exportBtn.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const dataSiswa = JSON.parse(localStorage.getItem('dataSiswa')) || [];
+            let rows = [];
+
+            dataSiswa.forEach((siswa, index) => {
+                rows.push([index + 1, siswa.nama, siswa.kelas, siswa.masalah]);
+            });
+
+            if(rows.length === 0){
+                alert("Belum ada data untuk diexport!");
+                return;
+            }
+
+            doc.setFontSize(18);
+            doc.text("BK SMAN 11 Luwu", 14, 15);
+            doc.setFontSize(14);
+            doc.text("Data Konsultasi Siswa", 14, 25);
+
+            doc.autoTable({
+                head: [['No', 'Nama Siswa', 'Kelas', 'Masalah']],
+                body: rows,
+                startY: 30,
+                styles: { fontSize: 10, cellWidth: 'wrap' },
+                headStyles: { fillColor: [26, 35, 126], textColor: 255 }
+            });
+
+            doc.save("Data_Konsultasi_Siswa.pdf");
+        });
+    </script>
+</body>
+</html>

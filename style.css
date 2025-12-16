@@ -1,0 +1,92 @@
+/* Reset basic */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+header {
+    background-color: #1A237E; /* Biru tua */
+    color: #FFD700; /* Emas */
+    text-align: center;
+    padding: 1rem 0;
+}
+
+header .logo {
+    width: 80px;
+    display: block;
+    margin: 0 auto 10px auto;
+}
+
+/* Main */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f2f2f2;
+}
+
+/* Form section */
+.form-section {
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.form-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1A237E; /* Biru tua */
+}
+
+/* Form input */
+.form-section label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-section input, 
+.form-section textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+/* Button */
+.form-section button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: #1A237E; /* Biru tua */
+    border: none;
+    color: #FFD700; /* Emas */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.form-section button:hover {
+    background-color: #FFD700; /* Emas */
+    color: #1A237E; /* Teks biru tua */
+    border: 1px solid #1A237E;
+}
+
+/* Pesan */
+#pesan {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: #1A237E; /* Biru tua */
+}
